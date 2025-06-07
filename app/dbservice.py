@@ -13,56 +13,58 @@ def create_tables():
         """
     CREATE TABLE IF NOT EXISTS leituras (
         ID_ZONA INTEGER,
-        Timestamp TEXT,
-        Umidade REAL,
-        PH REAL,
-        PRIMARY KEY (ID_Zona, Timestamp)
+        timestamp TEXT,
+        umidade REAL,
+        temperatura REAL,
+        PRIMARY KEY (ID_ZONA, timestamp)
     )
     """
     )
 
     cursor.execute(
         """
-    CREATE TABLE IF NOT EXISTS log_acoes (
-        Timestamp TEXT PRIMARY KEY,
-        Acao VARCHAR(50),
-        Manual BOOLEAN
-    )
-    """
+        CREATE TABLE IF NOT EXISTS log_acoes (
+            ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            ID_ZONA INTEGER,
+            timestamp TEXT,
+            log VARCHAR(50),
+            Manual BOOLEAN
+        )
+        """
     )
 
     conn.commit()
     conn.close()
 
 
-def salvar_leitura(id_zona: int, umidade: float, ph: float):
+def salvar_leitura(id_zona: int, umidade: float, temperatura: float):
     timestamp = datetime.now().isoformat()
 
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute(
         """
-        INSERT OR REPLACE INTO leituras (ID_Zona, Timestamp, Umidade, PH)
+        INSERT OR REPLACE INTO leituras (ID_ZONA, timestamp, umidade, temperatura)
         VALUES (?, ?, ?, ?)
     """,
-        (id_zona, timestamp, umidade, ph),
+        (id_zona, timestamp, umidade, temperatura),
     )
 
     conn.commit()
     conn.close()
 
 
-def salvar_log_acao(acao: str, manual: bool):
+def salvar_log_acao(id_zona: int, log: str, manual: bool):
     timestamp = datetime.now().isoformat()
 
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
     cursor.execute(
         """
-        INSERT OR REPLACE INTO log_acoes (Timestamp, Acao, Manual)
-        VALUES (?, ?, ?)
+        INSERT INTO log_acoes (ID_ZONA, timestamp, log, manual)
+        VALUES (?, ?, ?, ?)
     """,
-        (timestamp, acao, int(manual)),
+        (id_zona, timestamp, log, int(manual)),
     )
     conn.commit()
     conn.close()

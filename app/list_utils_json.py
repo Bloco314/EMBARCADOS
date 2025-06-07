@@ -20,7 +20,7 @@ def listar_leituras():
         leitura = {
             "id": row[0],
             "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
-            "ph": row[3],
+            "temperatura": row[3],
             "humidity": row[4],
         }
         leituras_formatadas.append(leitura)
@@ -58,7 +58,7 @@ def listar_leituras_por_intervalo(
         leitura = {
             "id": row[0],
             "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
-            "ph": row[3],
+            "temperatura": row[3],
             "humidity": row[4],
         }
         leituras_formatadas.append(leitura)
@@ -128,11 +128,13 @@ def query_last_read():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT rowid, * FROM leituras
         ORDER BY Timestamp DESC
         LIMIT 1
-    """)
+    """
+    )
     row = cursor.fetchone()
     print("ROW retornada do banco:", row)  # <-- debug
     conn.close()
@@ -143,7 +145,7 @@ def query_last_read():
     leitura = {
         "id": row[0],
         "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
-        "ph": row[3],
+        "temperatura": row[3],
         "humidity": row[4],
     }
 

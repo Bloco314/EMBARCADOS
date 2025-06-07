@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body, Query
 from typing import Optional
 from .mqtt_service import publish_message
-from .utils.list_utils_json import *
+from .list_utils_json import *
 
 router = APIRouter()
 
@@ -42,6 +42,7 @@ async def get_logs_intervalo(
     fim: Optional[str] = Query(None, description="Timestamp final (ISO format)"),
 ):
     return listar_logs_por_intervalo(inicio, fim)
+
 
 @router.get("/get/last-read")
 async def get_last_read():
