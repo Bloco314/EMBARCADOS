@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 import os
 
-DB_NAME = os.path.join(os.getenv("DB_PATH", "."), "leituras.db")
+DB_NAME = os.path.join(os.getenv("DB_PATH", "."), "embarcados.db")
 
 
 def listar_leituras():
@@ -122,3 +122,29 @@ def listar_logs_por_intervalo(inicio: Optional[str] = None, fim: Optional[str] =
         logs_formatados.append(log)
 
     return logs_formatados
+
+
+def query_last_read():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT rowid, * FROM leituras
+        ORDER BY Timestamp DESC
+        LIMIT 1
+    """)
+    row = cursor.fetchone()
+    print("ROW retornada do banco:", row)  # <-- debug
+    conn.close()
+
+    if row is None:
+        return {"msg": "nenhuma leitura encontrada"}
+
+    leitura = {
+        "id": row[0],
+        "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
+        "ph": row[3],
+        "humidity": row[4],
+    }
+
+    return leitura

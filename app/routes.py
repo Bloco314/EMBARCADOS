@@ -43,6 +43,6 @@ async def get_logs_intervalo(
 ):
     return listar_logs_por_intervalo(inicio, fim)
 
-# @router.get("/get/last-read")
-# async def get_last_read():
-#     return get_last_read()
+@router.get("/get/last-read")
+async def get_last_read():
+    return query_last_read()
