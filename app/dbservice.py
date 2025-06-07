@@ -1,6 +1,7 @@
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
+import random
 
 DB_NAME = os.path.join(os.getenv("DB_PATH", "."), "embarcados.db")
 
@@ -37,8 +38,9 @@ def create_tables():
     conn.close()
 
 
-def salvar_leitura(id_zona: int, umidade: float, temperatura: float):
-    timestamp = datetime.now().isoformat()
+def salvar_leitura(id_zona: int, umidade: float, temperatura: float, timestamp: str = None):
+    if timestamp is None:
+        timestamp = datetime.now().isoformat()
 
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
@@ -71,9 +73,18 @@ def salvar_log_acao(id_zona: int, log: str, manual: bool):
 
 
 def mock_data():
-    temperaturas = [i * 10 for i in range(1, 10)]
-    umidades = [30, 60, 90]
+    temperaturas = [i * 5 for i in range(4, 10)]
+    umidades = [30, 50, 70, 90]
+    start_date = datetime(2025, 1, 1)
+
     for id_zona in range(1, 11):
-        for u in umidades:
-            for t in temperaturas:
-                salvar_leitura(id_zona, u, t)
+        for month_offset in range(0, 6):
+            base_date = start_date + timedelta(days=30 * month_offset)
+            for day in range(1, 28, 7):
+                temp = random.choice(temperaturas)
+                umid = random.choice(umidades)
+                
+                date = base_date.replace(day=day)
+                time_offset = timedelta(hours=random.choice([8, 15]))
+                full_timestamp = (date + time_offset).isoformat()
+                salvar_leitura(id_zona, umid, temp, timestamp=full_timestamp)
