@@ -1,0 +1,9 @@
+services:
+  fastapi:
+    build: .
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app   # Para recarregar código automaticamente em dev
+      - ./data:/data # Se quiser persistir o banco fora do container

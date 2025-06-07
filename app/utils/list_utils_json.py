@@ -1,8 +1,9 @@
 import sqlite3
 from datetime import datetime
 from typing import Optional
+import os
 
-DB_NAME = "embarcados.db"
+DB_NAME = os.path.join(os.getenv("DB_PATH", "."), "leituras.db")
 
 
 def listar_leituras():
@@ -87,9 +88,7 @@ def listar_logs():
     return logs_formatados
 
 
-def listar_logs_por_intervalo(
-    inicio: Optional[str] = None, fim: Optional[str] = None
-):
+def listar_logs_por_intervalo(inicio: Optional[str] = None, fim: Optional[str] = None):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 

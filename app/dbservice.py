@@ -1,7 +1,8 @@
 import sqlite3
 from datetime import datetime
+import os
 
-DB_NAME = "embarcados.db"
+DB_NAME = os.path.join(os.getenv("DB_PATH", "."), "leituras.db")
 
 
 def create_tables():

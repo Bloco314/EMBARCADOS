@@ -42,3 +42,7 @@ async def get_logs_intervalo(
     fim: Optional[str] = Query(None, description="Timestamp final (ISO format)"),
 ):
     return listar_logs_por_intervalo(inicio, fim)
+
+# @router.get("/get/last-read")
+# async def get_last_read():
+#     return get_last_read()

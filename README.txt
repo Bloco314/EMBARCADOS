@@ -2,9 +2,13 @@
 
 pip install -r requirements.txt
 
-# Execute com
+# Execute no terminal com
 
 python -m uvicorn app.main:app
+
+# ou pelo docker com
+
+docker compose up -- build
 
 # Existe uma rota de documentação automatica com swagger
 http://localhost:8000/docs
