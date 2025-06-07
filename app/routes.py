@@ -2,6 +2,7 @@ from fastapi import APIRouter, Body, Query
 from typing import Optional
 from .mqtt_service import publish_message
 from .list_utils_json import *
+from .dbservice import mock_data
 
 router = APIRouter()
 
@@ -17,6 +18,10 @@ async def mqtt_publish_json(topic: str, data: dict = Body(...)):
     publish_message(topic, data)
     return {"status": "mensagem JSON enviada", "topico": topic, "dados": data}
 
+@router.post("/mock-data")
+async def fill_data():
+    mock_data()
+    return {"status": "banco preenchido"}
 
 @router.get("/list-all/reads")
 async def get_leituras():

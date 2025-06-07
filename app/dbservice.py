@@ -68,3 +68,12 @@ def salvar_log_acao(id_zona: int, log: str, manual: bool):
     )
     conn.commit()
     conn.close()
+
+
+def mock_data():
+    temperaturas = [i * 10 for i in range(1, 10)]
+    umidades = [30, 60, 90]
+    for id_zona in range(1, 11):
+        for u in umidades:
+            for t in temperaturas:
+                salvar_leitura(id_zona, u, t)
