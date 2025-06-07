@@ -28,7 +28,7 @@ def on_message(client, userdata, msg):
             temperatura = payload.get("temperatura")
             salvar_leitura(id_zona, humidity, temperatura)
         # registra o log de um comando
-        elif msg.topic.startswith(PREFIX + "/" + MQTT_TOPICS[0]):
+        elif msg.topic.startswith(PREFIX + "/" + MQTT_TOPICS[1]):
             print(f"[MQTT] {msg.topic} => {payload}")
             id_zona = payload.get("zona")
             log = payload.get("log")

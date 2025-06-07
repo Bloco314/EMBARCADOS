@@ -12,16 +12,16 @@ def listar_leituras():
 
     cursor.execute("SELECT rowid, * FROM leituras")
     resultados = cursor.fetchall()
-
     conn.close()
 
     leituras_formatadas = []
     for row in resultados:
         leitura = {
             "id": row[0],
+            "id_zona": row[1],
             "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
-            "temperatura": row[3],
-            "humidity": row[4],
+            "umidade": row[3],
+            "temperatura": row[4],
         }
         leituras_formatadas.append(leitura)
 
@@ -38,17 +38,16 @@ def listar_leituras_por_intervalo(
     params = []
 
     if inicio and fim:
-        query += " WHERE Timestamp BETWEEN ? AND ?"
+        query += " WHERE timestamp BETWEEN ? AND ?"
         params.extend([inicio, fim])
     elif inicio:
-        query += " WHERE Timestamp >= ?"
+        query += " WHERE timestamp >= ?"
         params.append(inicio)
     elif fim:
-        query += " WHERE Timestamp <= ?"
+        query += " WHERE timestamp <= ?"
         params.append(fim)
 
-    query += " ORDER BY Timestamp ASC"
-
+    query += " ORDER BY timestamp ASC"
     cursor.execute(query, params)
     resultados = cursor.fetchall()
     conn.close()
@@ -57,9 +56,10 @@ def listar_leituras_por_intervalo(
     for row in resultados:
         leitura = {
             "id": row[0],
+            "id_zona": row[1],
             "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
-            "temperatura": row[3],
-            "humidity": row[4],
+            "umidade": row[3],
+            "temperatura": row[4],
         }
         leituras_formatadas.append(leitura)
 
@@ -72,16 +72,16 @@ def listar_logs():
 
     cursor.execute("SELECT rowid, * FROM log_acoes")
     resultados = cursor.fetchall()
-
     conn.close()
 
     logs_formatados = []
     for row in resultados:
         log = {
             "id": row[0],
-            "timestamp": datetime.fromisoformat(row[1]).strftime("%Y-%m-%d %H:%M"),
-            "action": row[2],
-            "manual": bool(row[3]),
+            "id_zona": row[2],
+            "timestamp": datetime.fromisoformat(row[3]).strftime("%Y-%m-%d %H:%M"),
+            "action": row[4],
+            "manual": bool(row[5]),
         }
         logs_formatados.append(log)
 
@@ -96,17 +96,16 @@ def listar_logs_por_intervalo(inicio: Optional[str] = None, fim: Optional[str] =
     params = []
 
     if inicio and fim:
-        query += " WHERE Timestamp BETWEEN ? AND ?"
+        query += " WHERE timestamp BETWEEN ? AND ?"
         params.extend([inicio, fim])
     elif inicio:
-        query += " WHERE Timestamp >= ?"
+        query += " WHERE timestamp >= ?"
         params.append(inicio)
     elif fim:
-        query += " WHERE Timestamp <= ?"
+        query += " WHERE timestamp <= ?"
         params.append(fim)
 
-    query += " ORDER BY Timestamp ASC"
-
+    query += " ORDER BY timestamp ASC"
     cursor.execute(query, params)
     resultados = cursor.fetchall()
     conn.close()
@@ -115,9 +114,10 @@ def listar_logs_por_intervalo(inicio: Optional[str] = None, fim: Optional[str] =
     for row in resultados:
         log = {
             "id": row[0],
-            "timestamp": datetime.fromisoformat(row[1]).strftime("%Y-%m-%d %H:%M"),
-            "action": row[2],
-            "manual": bool(row[3]),
+            "id_zona": row[2],
+            "timestamp": datetime.fromisoformat(row[3]).strftime("%Y-%m-%d %H:%M"),
+            "action": row[4],
+            "manual": bool(row[5]),
         }
         logs_formatados.append(log)
 
@@ -131,12 +131,11 @@ def query_last_read():
     cursor.execute(
         """
         SELECT rowid, * FROM leituras
-        ORDER BY Timestamp DESC
+        ORDER BY timestamp DESC
         LIMIT 1
-    """
+        """
     )
     row = cursor.fetchone()
-    print("ROW retornada do banco:", row)  # <-- debug
     conn.close()
 
     if row is None:
@@ -144,9 +143,40 @@ def query_last_read():
 
     leitura = {
         "id": row[0],
+        "id_zona": row[1],
         "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
-        "temperatura": row[3],
-        "humidity": row[4],
+        "umidade": row[3],
+        "temperatura": row[4],
     }
 
     return leitura
+
+
+def query_n_last_logs(n: int):
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT rowid, * FROM log_acoes
+        ORDER BY timestamp DESC
+        LIMIT ?
+        """,
+        (n,),
+    )
+
+    resultados = cursor.fetchall()
+    conn.close()
+
+    logs_formatados = []
+    for row in resultados:
+        log = {
+            "id": row[0],
+            "id_zona": row[2],
+            "timestamp": datetime.fromisoformat(row[3]).strftime("%Y-%m-%d %H:%M"),
+            "action": row[4],
+            "manual": bool(row[5]),
+        }
+        logs_formatados.append(log)
+
+    return logs_formatados
