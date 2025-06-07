@@ -140,3 +140,24 @@ def listar_logs_por_intervalo(inicio: Optional[str] = None, fim: Optional[str] =
     resultados = cursor.fetchall()
     conn.close()
     return resultados
+
+def listar_leituras_json():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT rowid, * FROM leituras")
+    resultados = cursor.fetchall()
+
+    conn.close()
+
+    leituras_formatadas = []
+    for row in resultados:
+        leitura = {
+            "id": row[0],
+            "timestamp": datetime.fromisoformat(row[2]).strftime('%Y-%m-%d %H:%M'),
+            "ph": row[3],
+            "humidity": row[4]
+        }
+        leituras_formatadas.append(leitura)
+
+    return leituras_formatadas
