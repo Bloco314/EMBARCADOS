@@ -19,7 +19,7 @@ def listar_leituras():
         leitura = {
             "id": row[0],
             "id_zona": row[1],
-            "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
+            "timestamp": datetime.fromisoformat(row[2]).strftime("%d/%m/%Y %H:%M"),
             "umidade": row[3],
             "temperatura": row[4],
         }
@@ -57,7 +57,7 @@ def listar_leituras_por_intervalo(
         leitura = {
             "id": row[0],
             "id_zona": row[1],
-            "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
+            "timestamp": datetime.fromisoformat(row[2]).strftime("%d/%m/%Y %H:%M"),
             "umidade": row[3],
             "temperatura": row[4],
         }
@@ -79,7 +79,7 @@ def listar_logs():
         log = {
             "id": row[0],
             "id_zona": row[2],
-            "timestamp": datetime.fromisoformat(row[3]).strftime("%Y-%m-%d %H:%M"),
+            "timestamp": datetime.fromisoformat(row[3]).strftime("%d/%m/%Y %H:%M"),
             "action": row[4],
             "manual": bool(row[5]),
         }
@@ -115,7 +115,7 @@ def listar_logs_por_intervalo(inicio: Optional[str] = None, fim: Optional[str] =
         log = {
             "id": row[0],
             "id_zona": row[2],
-            "timestamp": datetime.fromisoformat(row[3]).strftime("%Y-%m-%d %H:%M"),
+            "timestamp": datetime.fromisoformat(row[3]).strftime("%d/%m/%Y %H:%M"),
             "action": row[4],
             "manual": bool(row[5]),
         }
@@ -144,7 +144,7 @@ def query_last_read():
     leitura = {
         "id": row[0],
         "id_zona": row[1],
-        "timestamp": datetime.fromisoformat(row[2]).strftime("%Y-%m-%d %H:%M"),
+        "timestamp": datetime.fromisoformat(row[2]).strftime("%d/%m/%Y %H:%M"),
         "umidade": row[3],
         "temperatura": row[4],
     }
@@ -173,7 +173,7 @@ def query_n_last_logs(n: int):
         log = {
             "id": row[0],
             "id_zona": row[2],
-            "timestamp": datetime.fromisoformat(row[3]).strftime("%Y-%m-%d %H:%M"),
+            "timestamp": datetime.fromisoformat(row[3]).strftime("%d/%m/%Y %H:%M"),
             "action": row[4],
             "manual": bool(row[5]),
         }
