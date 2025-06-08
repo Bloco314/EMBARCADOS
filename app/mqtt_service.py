@@ -7,7 +7,7 @@ MQTT_PORT = 1883
 PREFIX = "bhive"
 
 # Topicos a serem observados
-MQTT_TOPICS = ["data", "action-log"]
+MQTT_TOPICS = ["readings", "logs"]
 
 
 def on_connect(client, userdata, flags, rc):
@@ -23,17 +23,17 @@ def on_message(client, userdata, msg):
         # registra uma leitura de dados
         if msg.topic.startswith(PREFIX + "/" + MQTT_TOPICS[0]):
             print(f"[MQTT] {msg.topic} => {payload}")
-            id_zona = payload.get("zona")
+            id_zona = payload.get("sensor")
             humidity = payload.get("humidity")
-            temperatura = payload.get("temperatura")
+            temperatura = payload.get("temp")
             salvar_leitura(id_zona, humidity, temperatura)
         # registra o log de um comando
         elif msg.topic.startswith(PREFIX + "/" + MQTT_TOPICS[1]):
             print(f"[MQTT] {msg.topic} => {payload}")
-            id_zona = payload.get("zona")
-            log = payload.get("log")
+            id_zona = payload.get("sensor")
+            log = payload.get("action")
             manual = payload.get("manual")
-            salvar_log_acao(id_zona, log, manual)
+            salvar_log_acao(id_zona, log, manual)   
 
     except json.JSONDecodeError:
         print("Erro ao decodificar a mensagem")
